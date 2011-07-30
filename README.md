@@ -4,7 +4,7 @@ Bunraku
 Description
 -----------
 
-A Puppet report handler and simple Sinatra dashboard
+A Puppet report handler and simple Sinatra status panel
 
 Requirements
 ------------

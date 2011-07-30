@@ -24,7 +24,6 @@ module Bunraku
     class Application < Sinatra::Base
 
       configure do
-        puts "Connecting to Redis"
         $redis = Redis.new
       end
 
@@ -46,7 +45,6 @@ module Bunraku
         @nodes = load_nodes($redis.smembers("all-nodes"))
         @nodes = @nodes.select { |node| node["status"] == 'failed' }
         @sorted = @nodes.sort_by { |node| node["time"] }.reverse!
-        redirect '/' if @sorted.empty?
         erb :failed
       end
 
