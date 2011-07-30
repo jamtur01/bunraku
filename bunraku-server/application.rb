@@ -36,7 +36,7 @@ module Bunraku
       end
 
       get '/' do
-        @nodes = load_nodes $redis.smembers("all-nodes")
+        @nodes = load_nodes($redis.smembers("all-nodes").last(100))
         @sorted = @nodes.sort_by { |node| node["time"] }.reverse!
         erb :index
       end
