@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 #--
 # Author:: James Turnbull (<james@lovedthanlost.net>)
 # Copyright:: Copyright (c) 2011 James Turnbull
@@ -16,8 +17,46 @@
 # limitations under the License.
 #
 
-#!/usr/bin/env ruby
+$:.unshift(File.expand_path(File.join(File.dirname(__FILE__), "..", "lib")))
 
-Dir.chdir(File.expand_path('../..', __FILE__)) do
-  exec "rackup #{ARGV.join(' ')} ./config.ru"
+require 'rubygems'
+require 'optparse'
+require 'bunraku/server'
+
+options = {}
+
+optparse = OptionParser.new do |opts|
+  # Set a banner, displayed at the top
+  # of the help screen.
+  opts.banner = 'Usage: binraku-server [options] ...'
+
+  opts.separator ''
+  opts.separator 'Configuration options:'
+
+  #options[:redis_server] = 'localhost'
+  #opts.on( '-s', '--server SERVER', String, 'The server address Redis is running on.') do |redis_server|
+  #  options[:redis_server] = redis_server
+  #end
+
+  #options[:redis_port] = 6379
+  #opts.on( '-p', '--port PORT', Integer, 'The port Redis is running on.') do |redis_port|
+  #   options[:redis_port] = redis_port
+  #end
+
+  opts.separator ""
+  opts.separator "Common options:"
+
+  opts.on_tail('-h', '--help', 'Display this screen' ) do
+    puts opts
+    exit
+  end
+end
+
+begin
+  optparse.parse!
+  Bunraku::Server::Application.run!
+rescue OptionParser::InvalidArgument, OptionParser::InvalidOption, OptionParser::MissingArgument
+  puts $!.to_s
+  puts optparse
+  exit
 end

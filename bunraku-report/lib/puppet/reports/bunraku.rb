@@ -22,14 +22,23 @@ require 'puppet'
 
 Puppet::Reports.register_report(:bunraku) do
 
+    configfile = File.join([File.dirname(Puppet.settings[:config]), "bunraku.yaml"])
+    raise(Puppet::ParseError, "Bunraku report config file #{configfile} not readable") unless File.exist?(configfile)
+    config = YAML.load_file(configfile)
+    STATUS_URL = config[:status_url]
+
+    desc <<-DESC
+    Send notification of the status reports to the Bunraku dashboard.  You will need to setup the Bunraku dashboard.
+    DESC
+
     def process
 
-      @status_url = 'http://localhost:9292/new'
+      STATUS_URL = 'http://localhost:9292/new'
 
       rep = consume_report(self)
       post_body = rep.to_json
       Puppet.debug "Sending report to Bunraku"
-      response = RestClient.post @status_url, {:data => post_body}, { :content_type => :json, :accept => :json }
+      response = RestClient.post STATUS_URL, {:data => post_body}, { :content_type => :json, :accept => :json }
     end
 
     def consume_report(report)

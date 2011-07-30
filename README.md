@@ -22,12 +22,21 @@ Installation & Usage
 
         $ sudo gem install rest-client json redis sinatra
 
-2.  Install a Redis server.
+2.  Install a Redis server. It assumes Redis is running on the default
+    localhost on port 6379.
 
-3.  Install bunraku-report as a module in your Puppet master's module
+3.  Run the Bunraku server:
+
+        $ bin/bunraku-server
+
+4.  Install bunraku-report as a module in your Puppet master's module
     path.
 
-4.  Enable pluginsync and reports on your master and clients in `puppet.conf`
+5.  Update the `status_url` variable in the `bunraku.yaml` file
+    with the URL for your Bunraku dashboard and copy the file to 
+    `/etc/puppet/`. An example file is included.
+
+6.  Enable pluginsync and reports on your master and clients in `puppet.conf`
 
         [master]
         report = true
@@ -37,7 +46,9 @@ Installation & Usage
         report = true
         pluginsync = true
 
-5.  Run the Puppet client and sync the report as a plugin
+7.  Run the Puppet client and sync the report as a plugin
+
+8.  Browse to the Bunraku server at http://example.com:4567
 
 Author
 ------

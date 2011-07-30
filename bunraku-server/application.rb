@@ -15,16 +15,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-require 'rubygems'
 require 'redis'
-require 'sinatra'
 require 'json'
 
 module Bunraku
   module Server
     class Application < Sinatra::Base
 
-      $redis = Redis.new
+      configure do
+        puts "Connecting to Redis"
+        $redis = Redis.new
+      end
 
       def load_nodes(ids)
         if ids.empty?
@@ -36,7 +37,7 @@ module Bunraku
 
       get '/' do
         @nodes = load_nodes $redis.smembers("all-nodes")
-        @sorted = @nodes.sort_by { |node| node["time"] }
+        @sorted = @nodes.sort_by { |node| node["time"] }.reverse!
         erb :index
       end
 
