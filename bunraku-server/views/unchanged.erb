@@ -1,0 +1,17 @@
+<table>
+   <tr>
+    <th colspan="3">Unchanged Puppet nodes</th>
+  </tr>
+  <tr class="yellow">
+    <td class="width">Time</td>
+    <td class="adjacent">Node</td>
+    <td class="adjacent">Status</td>
+  </tr>
+  <% @sorted.each do |node| %>
+      <tr>
+        <td class="adjacent"><%= node["time"] %></td>
+        <td class="adjacent"><%= node["node"] %></td>
+        <td class="adjacent"><%= node["status"] %></td>
+      </tr>
+  <% end %>
+</table>

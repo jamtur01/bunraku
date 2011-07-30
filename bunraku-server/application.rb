@@ -17,6 +17,7 @@
 #
 require 'redis'
 require 'json'
+require 'pp'
 
 module Bunraku
   module Server
@@ -39,6 +40,30 @@ module Bunraku
         @nodes = load_nodes($redis.smembers("all-nodes").last(100))
         @sorted = @nodes.sort_by { |node| node["time"] }.reverse!
         erb :index
+      end
+
+      get '/failed' do
+        @nodes = load_nodes($redis.smembers("all-nodes"))
+        @nodes = @nodes.select { |node| node["status"] == 'failed' }
+        @sorted = @nodes.sort_by { |node| node["time"] }.reverse!
+        redirect '/' if @sorted.empty?
+        erb :failed
+      end
+
+      get '/unchanged' do
+        @nodes = load_nodes($redis.smembers("all-nodes"))
+        @nodes = @nodes.select { |node| node["status"] == 'unchanged' }
+        @sorted = @nodes.sort_by { |node| node["time"] }.reverse!
+        redirect '/' if @sorted.empty?
+        erb :unchanged
+      end
+
+      get '/successful' do
+        @nodes = load_nodes($redis.smembers("all-nodes"))
+        @nodes = @nodes.select { |node| node["status"] == 'successful' }
+        @sorted = @nodes.sort_by { |node| node["time"] }.reverse!
+        redirect '/' if @sorted.empty?
+        erb :successful
       end
 
       post '/new/?' do
