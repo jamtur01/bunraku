@@ -51,13 +51,8 @@ Puppet::Reports.register_report(:bunraku) do
 
     def construct_report
       rep = { :node              => @node,
-              :success           => success?,
               :time              => @time,
               :status            => @status }
-    end
-
-    def success?
-      @status != 'failed'
     end
 
     def extract_node_info(report)
