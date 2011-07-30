@@ -1,0 +1,54 @@
+<html>
+  <head>
+    <title>Puppet Nodes</title>
+    <style type="text/css" media="screen">
+      #main {
+        font: 11px/24px Verdana, Arial, Helvetica, sans-serif;
+        width: 800px;
+        margin: 60px auto;
+      }
+      #head div {
+        float: right;
+        text-align: right;
+        font-size: 0.8em;
+      }
+      table {
+        font: 11px/24px Verdana, Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 720px;
+      }
+      th {
+        padding: 0 0.5em;
+        text-align: center;
+      }
+      tr.yellow td {
+        border-top: 1px solid #FB7A31;
+        border-bottom: 1px solid #FB7A31;
+        border-left: 1px solid #FB7A31;
+        border-right: 1px solid #FB7A31;
+        background: #FFC;
+      }
+      td {
+        border-bottom: 1px solid #CCC;
+        border-right: 1px solid #CCC;
+        padding: 0 0.5em;
+      }
+      td.width {
+        width: 80px;
+        text-align: center;
+      }
+      td.adjacent {
+        border-left: 1px solid #CCC;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <div id="main">
+    <div id="head">
+      <h1>Puppet Nodes</h1>
+    </div>
+    <div>
+      <%= yield %>
+    </div>
+  </div>
+</html>

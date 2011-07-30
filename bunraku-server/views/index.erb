@@ -1,0 +1,18 @@
+<table>
+  <tr class="yellow">
+    <td class="width">Time</td>
+    <td class="adjacent">Node</td>
+    <td class="adjacent">Status</td>
+  </tr>
+  <% @sorted.each do |node| %>
+    <% if node["status"] == 'failed' %>
+      <tr style="color:red;font-weight:bold">
+    <% else %>
+      <tr>
+    <% end %>
+        <td class="adjacent"><%= node["time"] %></td>
+        <td class="adjacent"><%= node["node"] %></td>
+        <td class="adjacent"><%= node["status"] %></td>
+      </tr>
+  <% end %>
+</table>
