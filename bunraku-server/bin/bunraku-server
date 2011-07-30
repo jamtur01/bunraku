@@ -22,6 +22,7 @@ $:.unshift(File.expand_path(File.join(File.dirname(__FILE__), "..", "lib")))
 require 'rubygems'
 require 'optparse'
 require 'bunraku/server'
+require 'bunraku/version'
 
 options = {}
 
@@ -43,11 +44,17 @@ optparse = OptionParser.new do |opts|
   #   options[:redis_port] = redis_port
   #end
 
+
   opts.separator ""
   opts.separator "Common options:"
 
   opts.on_tail('-h', '--help', 'Display this screen' ) do
     puts opts
+    exit
+  end
+
+  opts.on_tail("--version", "Show version") do
+    puts Bunraku::Version::VERSION
     exit
   end
 end

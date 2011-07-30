@@ -24,7 +24,21 @@ module Bunraku
     class Application < Sinatra::Base
 
       configure do
+        set :static, true
+        set :root, File.dirname(__FILE__)
+        set :public, 'public'
         $redis = Redis.new
+      end
+
+      helpers do
+        def cycle
+          %w{even odd}[@_cycle = ((@_cycle || -1) + 1) % 2]
+        end
+
+        CYCLE = %w{even odd}
+        def cycle_fully_sick
+          CYCLE[@_cycle = ((@_cycle || -1) + 1) % 2]
+        end
       end
 
       def load_nodes(ids)
@@ -58,7 +72,7 @@ module Bunraku
 
       get '/successful' do
         @nodes = load_nodes($redis.smembers("all-nodes"))
-        @nodes = @nodes.select { |node| node["status"] == 'successful' }
+        @nodes = @nodes.select { |node| node["status"] == 'changed' }
         @sorted = @nodes.sort_by { |node| node["time"] }.reverse!
         redirect '/' if @sorted.empty?
         erb :successful

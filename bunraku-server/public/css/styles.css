@@ -1,0 +1,53 @@
+ html, body {
+ margin: 0;
+ padding: 0;
+ border: 0;
+ font: 11px/24px Verdana, Arial, Helvetica, sans-serif;
+}
+ body { background-color: #ccc; /* change the color to your background color */ }
+#main {
+ width: 80%;
+ max-width: 1000px;
+ background-color:#fff;
+ border: solid black medium; /* remove if you don't want a border */
+ margin: 2em auto;
+ padding: 1em;
+ font: 11px/24px Verdana, Arial, Helvetica, sans-serif;
+}
+#main h1 {
+  text-align: center;
+  color: #000000;
+}
+#main h1 a {
+  text-decoration: none;
+  color: #000000;
+}
+table {
+  font: 11px/24px Verdana, Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 95%;
+}
+td, th {
+  font-size: 1em;
+  text-align: center;
+  border: 1px solid #98bf21;
+  padding: 3px 7px 2px 7px;
+}
+th {
+  font-size: 1.1em;
+  text-align: center;
+  padding-top: 5px;
+  padding-bottom: 4px;
+  background-color: #A7C942;
+  color: #ffffff;
+}
+td.sh {
+  font-weight: bold;
+}
+tr.even td {
+  color: #000000;
+}
+tr.odd td {
+  color: #000000;
+  background-color: #EAF2D3;
+}
