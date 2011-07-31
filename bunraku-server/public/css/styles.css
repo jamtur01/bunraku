@@ -9,7 +9,7 @@
  width: 80%;
  max-width: 1000px;
  background-color:#fff;
- border: solid black medium; /* remove if you don't want a border */
+ border: solid #98bf21 medium; /* remove if you don't want a border */
  margin: 2em auto;
  padding: 1em;
  font: 11px/24px Verdana, Arial, Helvetica, sans-serif;
