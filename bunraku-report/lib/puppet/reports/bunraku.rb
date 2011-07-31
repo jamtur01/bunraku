@@ -19,6 +19,7 @@
 require 'restclient'
 require 'time'
 require 'puppet'
+require 'pp'
 
 Puppet::Reports.register_report(:bunraku) do
 
@@ -32,35 +33,47 @@ Puppet::Reports.register_report(:bunraku) do
     DESC
 
     def process
-      rep = consume_report(self)
-      post_body = rep.to_json
+      body = consume_report(self)
+      post_body = body.to_json
       Puppet.debug "Sending report to Bunraku"
       response = RestClient.post STATUS_URL, {:data => post_body}, { :content_type => :json, :accept => :json }
     end
 
     def consume_report(report)
-      extract_node_info(report)
-      extract_status(report)
-      extract_time(report)
-      rep = construct_report
+      node = extract_node_info(report)
+      status = extract_status(report)
+      time = extract_time(report)
+      metrics = extract_metrics(report)
+      rep = construct_report(node,status,time,metrics)
       rep
     end
 
-    def construct_report
-      rep = { :node              => @node,
-              :time              => @time,
-              :status            => @status }
+    def construct_report(node,status,time,logs,metrics)
+      rep = { :node              => node,
+              :time              => time,
+              :status            => status,
+              :metrics           => metrics }
     end
 
     def extract_node_info(report)
-      @node = report.host
+      node = report.host
     end
 
     def extract_status(report)
-      @status = report.status
+      status = report.status
     end
 
     def extract_time(report)
-      @time = Time.now.strftime("%Y-%m-%d %H:%M:%S")
+      time = Time.now.strftime("%Y-%m-%d %H:%M:%S")
+    end
+
+    def extract_metrics(report)
+      metrics = {}
+      stats = report.metrics
+      stats.each { |metric,data| 
+        data.values.each { |v| 
+          metrics["#{v[0]} #{metric}"] = v[2] }
+      }
+      metrics
     end
 end

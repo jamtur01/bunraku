@@ -49,31 +49,39 @@ module Bunraku
         end
       end
 
+      def sort_nodes(nodes)
+        if nodes.empty?
+          []
+        else
+          nodes.sort_by { |node| node["time"] }.reverse!
+        end
+      end
+
       get '/' do
-        @nodes = load_nodes($redis.smembers("all-nodes").last(100))
-        @sorted = @nodes.sort_by { |node| node["time"] }.reverse!
+        nodes = load_nodes($redis.smembers("all-nodes").last(100))
+        @sorted = sort_nodes(nodes)
         erb :index
       end
 
       get '/failed' do
-        @nodes = load_nodes($redis.smembers("all-nodes"))
-        @nodes = @nodes.select { |node| node["status"] == 'failed' }
-        @sorted = @nodes.sort_by { |node| node["time"] }.reverse!
+        nodes = load_nodes($redis.smembers("all-nodes"))
+        nodes = nodes.select { |node| node["status"] == 'failed' }
+        @sorted = sort_nodes(nodes)
         erb :failed
       end
 
       get '/unchanged' do
-        @nodes = load_nodes($redis.smembers("all-nodes"))
-        @nodes = @nodes.select { |node| node["status"] == 'unchanged' }
-        @sorted = @nodes.sort_by { |node| node["time"] }.reverse!
+        nodes = load_nodes($redis.smembers("all-nodes"))
+        nodes = nodes.select { |node| node["status"] == 'unchanged' }
+        @sorted = sort_nodes(nodes)
         redirect '/' if @sorted.empty?
         erb :unchanged
       end
 
       get '/successful' do
-        @nodes = load_nodes($redis.smembers("all-nodes"))
-        @nodes = @nodes.select { |node| node["status"] == 'changed' }
-        @sorted = @nodes.sort_by { |node| node["time"] }.reverse!
+        nodes = load_nodes($redis.smembers("all-nodes"))
+        nodes = nodes.select { |node| node["status"] == 'changed' }
+        @sorted = sort_nodes(nodes)
         redirect '/' if @sorted.empty?
         erb :successful
       end
