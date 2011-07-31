@@ -57,6 +57,10 @@ module Bunraku
         end
       end
 
+      def select_nodes(nodes,status)
+        nodes.select { |node| node["status"] == status }
+      end
+
       get '/' do
         nodes = load_nodes($redis.smembers("all-nodes").last(100))
         @sorted = sort_nodes(nodes)
@@ -65,14 +69,14 @@ module Bunraku
 
       get '/failed' do
         nodes = load_nodes($redis.smembers("all-nodes"))
-        nodes = nodes.select { |node| node["status"] == 'failed' }
+        nodes = select_nodes(nodes,'failed')
         @sorted = sort_nodes(nodes)
         erb :failed
       end
 
       get '/unchanged' do
         nodes = load_nodes($redis.smembers("all-nodes"))
-        nodes = nodes.select { |node| node["status"] == 'unchanged' }
+        nodes = select_nodes(nodes,'unchanged')
         @sorted = sort_nodes(nodes)
         redirect '/' if @sorted.empty?
         erb :unchanged
@@ -80,7 +84,7 @@ module Bunraku
 
       get '/successful' do
         nodes = load_nodes($redis.smembers("all-nodes"))
-        nodes = nodes.select { |node| node["status"] == 'changed' }
+        nodes = select_nodes(nodes,'changed')
         @sorted = sort_nodes(nodes)
         redirect '/' if @sorted.empty?
         erb :successful
