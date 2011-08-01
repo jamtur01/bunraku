@@ -17,7 +17,6 @@
 #
 require 'redis'
 require 'json'
-require 'pp'
 
 module Bunraku
   module Server
@@ -27,7 +26,9 @@ module Bunraku
         set :static, true
         set :root, File.dirname(__FILE__)
         set :public, 'public'
-        $redis = Redis.new
+        set :redis_server, 'localhost'
+        set :redis_port, 6379
+        $redis = Redis.new(:host => settings.redis_server, :port => settings.redis_port)
       end
 
       helpers do

@@ -9,7 +9,6 @@ A Puppet report handler and simple Sinatra status panel
 Requirements
 ------------
 
-* `rest-client`
 * `json`
 * `puppet`
 * `redis`
@@ -18,19 +17,25 @@ Requirements
 Installation & Usage
 -------------------
 
-1.  Install the required gems
+1.  Install the required gems on the server
 
-        $ sudo gem install rest-client json redis sinatra
+        $ sudo gem install json redis sinatra
 
 2.  Install a Redis server. It assumes Redis is running on the default
-    localhost on port 6379.
+    localhost on port 6379. You can override this with the
+    `--redis-server` and `--redis-port` command line options.
 
 3.  Run the Bunraku server:
 
         $ bin/bunraku-server
 
+    This will run bunraku-server from the in-built Sinatra 
+    webserver. The bunraku-server directory also contains a `config.ru`
+    file you can use with `rackup` if required.
+
 4.  Install bunraku-report as a module in your Puppet master's module
-    path.
+    path.  You will also need to install the `rest-client` gem on this
+    host.
 
 5.  Update the `status_url` variable in the `bunraku.yaml` file
     with the URL for your Bunraku dashboard and copy the file to 

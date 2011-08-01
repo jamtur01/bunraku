@@ -34,16 +34,17 @@ optparse = OptionParser.new do |opts|
   opts.separator ''
   opts.separator 'Configuration options:'
 
-  #options[:redis_server] = 'localhost'
-  #opts.on( '-s', '--server SERVER', String, 'The server address Redis is running on.') do |redis_server|
-  #  options[:redis_server] = redis_server
-  #end
+  opts.on( '-s', '--redis-server SERVER', 'The server address Redis is running on.') { |rs|
+    Bunraku::Server::Application.set :redis_server, rs 
+  }
+  opts.on( '-p', '--redis-port PORT', 'The port Redis is running on.') { |rp|
+    Bunraku::Server::Application.set :redis_port, rp 
+  }
 
-  #options[:redis_port] = 6379
-  #opts.on( '-p', '--port PORT', Integer, 'The port Redis is running on.') do |redis_port|
-  #   options[:redis_port] = redis_port
-  #end
-
+  opts.on_tail( '-v', '--version', 'Show version') do
+    puts "Bunraku version #{Bunraku::Version::VERSION}"
+    exit
+  end
 
   opts.separator ""
   opts.separator "Common options:"
@@ -52,7 +53,6 @@ optparse = OptionParser.new do |opts|
     puts opts
     exit
   end
-
   opts.on_tail("--version", "Show version") do
     puts Bunraku::Version::VERSION
     exit

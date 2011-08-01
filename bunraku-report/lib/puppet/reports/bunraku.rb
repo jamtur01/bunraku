@@ -16,10 +16,14 @@
 # limitations under the License.
 #
 
-require 'restclient'
 require 'time'
 require 'puppet'
-require 'pp'
+
+begin
+  require 'rest-client'
+rescue LoadError
+  Puppet.info "You need the `rest-client` gem to use the Bunraku report"
+end
 
 Puppet::Reports.register_report(:bunraku) do
 

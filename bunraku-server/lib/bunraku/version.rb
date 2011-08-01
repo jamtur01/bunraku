@@ -1,8 +1,5 @@
-require 'sinatra/base'
-require 'application'
-
 module Bunraku
   module Version
-    VERSION = '0.0.1'
+    VERSION = '0.0.2'
   end
 end
