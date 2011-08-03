@@ -48,9 +48,8 @@ module Bunraku
           []
         else
           nodes = []
-          ids.each { |id| 
+          ids.each { |id|
             node = $redis.hgetall("node-#{id}")
-            node["id"] = id
             nodes << node
           }
           nodes
@@ -107,14 +106,21 @@ module Bunraku
       end
 
       post '/new/?' do
-        node_id = $redis.incr(:node_counter)
+        id = $redis.incr(:node_counter)
 
         node = JSON.parse(params[:data])
 
         node.each { |type,value|
-          $redis.hset("node-#{node_id}", type, value)
+          if type == 'metrics'
+            value.each { |n,d|
+              $redis.hset("node-#{id}:#{type}", n, d)
+            }
+          else
+            $redis.hset("node-#{id}", type, value)
+          end
         }
-        $redis.sadd("all-nodes", node_id)
+        $redis.hset("node-#{id}", "id", id)
+        $redis.sadd("all-nodes", id)
       end
     end
   end
