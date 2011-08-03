@@ -45,7 +45,7 @@ Puppet::Reports.register_report(:bunraku) do
 
     def consume_report(report)
       metrics = extract_metrics(report)
-      rep = construct_report(report,metrics)
+      rep     = construct_report(report,metrics)
       rep
     end
 
@@ -54,7 +54,7 @@ Puppet::Reports.register_report(:bunraku) do
               :time              => Time.now.strftime("%Y-%m-%d %H:%M:%S"),
               :status            => report.status,
               :kind              => report.kind,
-              :puppet_version    => report.puppet_version,
+              :config_version    => report.configuration_version,
               :metrics           => metrics }
     end
 
@@ -70,8 +70,12 @@ Puppet::Reports.register_report(:bunraku) do
 
     def extract_logs(report)
       logs = []
-      report.logs.each { |log|
-      logs << log
+      log = {}
+      report.logs.each { |l|
+        log["message"] = l.message
+        log["level"] = l.level
+        log["time"] = l.time
+        logs << log
       }
       logs
     end

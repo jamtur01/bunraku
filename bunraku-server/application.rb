@@ -17,7 +17,6 @@
 #
 require 'redis'
 require 'json'
-require 'pp'
 
 module Bunraku
   module Server
