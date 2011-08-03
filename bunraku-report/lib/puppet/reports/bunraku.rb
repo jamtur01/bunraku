@@ -54,16 +54,25 @@ Puppet::Reports.register_report(:bunraku) do
               :time              => Time.now.strftime("%Y-%m-%d %H:%M:%S"),
               :status            => report.status,
               :kind              => report.kind,
+              :puppet_version    => report.puppet_version,
               :metrics           => metrics }
     end
 
     def extract_metrics(report)
       metrics = {}
       stats = report.metrics
-      stats.each { |metric,data| 
-        data.values.each { |v| 
+      stats.each { |metric,data|
+        data.values.each { |v|
           metrics["#{v[0]} #{metric}"] = v[2] }
       }
       metrics
+    end
+
+    def extract_logs(report)
+      logs = []
+      report.logs.each { |log|
+      logs << log
+      }
+      logs
     end
 end
