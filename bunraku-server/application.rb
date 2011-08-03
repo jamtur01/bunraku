@@ -62,11 +62,11 @@ module Bunraku
 
       def load_node(id)
         if id.nil?
-          return "No node ID found"
+          return "No node found"
         else
-          node = $redis.hgetall("node-#{id}")
+          @detail = $redis.hgetall("node-#{id}")
+          @metrics = $redis.hgetall("node-#{id}:metrics")
         end
-        node
       end
 
       def sort_nodes(nodes)
@@ -124,7 +124,7 @@ module Bunraku
 
       get '/node/detail/:id' do |id|
         id = params[:id]
-        @detail = load_node(id)
+        load_node(id)
         erb :detail
       end
 

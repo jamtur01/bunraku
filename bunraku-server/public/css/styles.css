@@ -44,6 +44,13 @@ th {
 td.sh {
   font-weight: bold;
 }
+td.mt {
+    font-weight: bold;
+    text-align: left;
+}
+td.mtv {
+    text-align: right;
+}
 tr.even td {
   color: #000000;
 }
