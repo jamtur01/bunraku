@@ -90,12 +90,12 @@ module Bunraku
         erb :unchanged
       end
 
-      get '/successful' do
+      get '/changed' do
         nodes = load_nodes($redis.smembers("all-nodes"))
         nodes = select_node(nodes,'status','changed')
         @sorted = sort_nodes(nodes)
         redirect '/' if @sorted.empty?
-        erb :successful
+        erb :changed
       end
 
       get '/node/:node' do |node|
