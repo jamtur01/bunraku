@@ -44,31 +44,17 @@ Puppet::Reports.register_report(:bunraku) do
     end
 
     def consume_report(report)
-      node = extract_node_info(report)
-      status = extract_status(report)
-      time = extract_time(report)
       metrics = extract_metrics(report)
-      rep = construct_report(node,status,time,metrics)
+      rep = construct_report(report,metrics)
       rep
     end
 
-    def construct_report(node,status,time,logs,metrics)
-      rep = { :node              => node,
-              :time              => time,
-              :status            => status,
+    def construct_report(report,metrics)
+      rep = { :node              => report.host,
+              :time              => Time.now.strftime("%Y-%m-%d %H:%M:%S"),
+              :status            => report.status,
+              :kind              => report.kind,
               :metrics           => metrics }
-    end
-
-    def extract_node_info(report)
-      node = report.host
-    end
-
-    def extract_status(report)
-      status = report.status
-    end
-
-    def extract_time(report)
-      time = Time.now.strftime("%Y-%m-%d %H:%M:%S")
     end
 
     def extract_metrics(report)
