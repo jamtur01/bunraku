@@ -17,6 +17,7 @@
 #
 require 'redis'
 require 'json'
+require 'pp'
 
 module Bunraku
   module Server
@@ -46,7 +47,13 @@ module Bunraku
         if ids.empty?
           []
         else
-          $redis.mget(*ids.map { |id| "node-#{id}" }).map { |raw| JSON.parse(raw) }
+          nodes = []
+          ids.each { |id| 
+            node = $redis.hgetall("node-#{id}")
+            node["id"] = id
+            nodes << node
+          }
+          nodes
         end
       end
 
@@ -58,8 +65,8 @@ module Bunraku
         end
       end
 
-      def select_nodes(nodes,status)
-        nodes.select { |node| node["status"] == status }
+      def select_node(nodes,query,value)
+        nodes.select { |node| node[query] == value }
       end
 
       get '/' do
@@ -70,14 +77,14 @@ module Bunraku
 
       get '/failed' do
         nodes = load_nodes($redis.smembers("all-nodes"))
-        nodes = select_nodes(nodes,'failed')
+        nodes = select_node(nodes,'status','failed')
         @sorted = sort_nodes(nodes)
         erb :failed
       end
 
       get '/unchanged' do
         nodes = load_nodes($redis.smembers("all-nodes"))
-        nodes = select_nodes(nodes,'unchanged')
+        nodes = select_node(nodes,'status','unchanged')
         @sorted = sort_nodes(nodes)
         redirect '/' if @sorted.empty?
         erb :unchanged
@@ -85,18 +92,28 @@ module Bunraku
 
       get '/successful' do
         nodes = load_nodes($redis.smembers("all-nodes"))
-        nodes = select_nodes(nodes,'changed')
+        nodes = select_node(nodes,'status','changed')
         @sorted = sort_nodes(nodes)
         redirect '/' if @sorted.empty?
         erb :successful
       end
 
+      get '/node/:node' do |node|
+        @node = params[:node]
+        nodes = load_nodes($redis.smembers("all-nodes"))
+        nodes = select_node(nodes,'node',node)
+        @sorted = sort_nodes(nodes)
+        erb :node
+      end
+
       post '/new/?' do
         node_id = $redis.incr(:node_counter)
 
-        node = params[:data]
+        node = JSON.parse(params[:data])
 
-        $redis.set("node-#{node_id}", node)
+        node.each { |type,value|
+          $redis.hset("node-#{node_id}", type, value)
+        }
         $redis.sadd("all-nodes", node_id)
       end
     end
