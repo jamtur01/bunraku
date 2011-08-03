@@ -43,6 +43,10 @@ module Bunraku
         end
       end
 
+      def get_title(path)
+        path.gsub(/^\//, '').capitalize
+      end
+
       def load_nodes(ids)
         if ids.empty?
           []
@@ -54,6 +58,15 @@ module Bunraku
           }
           nodes
         end
+      end
+
+      def load_node(id)
+        if id.nil?
+          return "No node ID found"
+        else
+          node = $redis.hgetall("node-#{id}")
+        end
+        node
       end
 
       def sort_nodes(nodes)
@@ -69,32 +82,36 @@ module Bunraku
       end
 
       get '/' do
+        @title = nil
         nodes = load_nodes($redis.smembers("all-nodes").last(100))
         @sorted = sort_nodes(nodes)
         erb :index
       end
 
       get '/failed' do
+        @title = get_title(request.path_info)
         nodes = load_nodes($redis.smembers("all-nodes"))
         nodes = select_node(nodes,'status','failed')
         @sorted = sort_nodes(nodes)
-        erb :failed
+        erb :index
       end
 
       get '/unchanged' do
+        @title = get_title(request.path_info)
         nodes = load_nodes($redis.smembers("all-nodes"))
         nodes = select_node(nodes,'status','unchanged')
         @sorted = sort_nodes(nodes)
         redirect '/' if @sorted.empty?
-        erb :unchanged
+        erb :index
       end
 
       get '/changed' do
+        @title = get_title(request.path_info)
         nodes = load_nodes($redis.smembers("all-nodes"))
         nodes = select_node(nodes,'status','changed')
         @sorted = sort_nodes(nodes)
         redirect '/' if @sorted.empty?
-        erb :changed
+        erb :index
       end
 
       get '/node/:node' do |node|
@@ -103,6 +120,12 @@ module Bunraku
         nodes = select_node(nodes,'node',node)
         @sorted = sort_nodes(nodes)
         erb :node
+      end
+
+      get '/node/detail/:id' do |id|
+        id = params[:id]
+        @detail = load_node(id)
+        erb :detail
       end
 
       post '/new/?' do
