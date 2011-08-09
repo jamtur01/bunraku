@@ -17,6 +17,7 @@
 #
 
 require 'time'
+require 'json'
 require 'puppet'
 
 begin
