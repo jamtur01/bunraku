@@ -1,19 +1,25 @@
-<table>
+<table class="table table-bordered">
   <tr>
     <th colspan="2">Puppet Node: <%= @node %></th>
   </tr>
-  <tr>
-    <td class="sh">Time</td>
-    <td class="sh">Status</td>
-  </tr>
-  <% @sorted.each do |node| %>
-  <% if node["status"] == 'failed' %>
+  <% unless @sorted.empty? %>
+    <tr>
+      <td class="sh">Time</td>
+      <td class="sh">Status</td>
+    </tr>
+    <% @sorted.each do |node| %>
+      <% if node["status"] == 'failed' %>
       <tr class="<%= cycle %>" style="color:red;font-weight:bold">
-    <% else %>
-      <tr class="<%= cycle %>">
-    <% end %>
+      <% else %>
+        <tr class="<%= cycle %>">
+      <% end %>
         <td><%= node["time"] %></td>
         <td><%= node["status"] %></td>
       </tr>
+    <% end %>
+  <% else %>
+  <tr>
+    <td>No nodes have reported in</td>
+  </tr>
   <% end %>
 </table>

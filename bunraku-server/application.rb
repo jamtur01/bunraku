@@ -92,6 +92,7 @@ module Bunraku
         nodes = load_nodes($redis.smembers("all-nodes"))
         nodes = select_node(nodes,'status','failed')
         @sorted = sort_nodes(nodes)
+        redirect '/' if @sorted.empty?
         erb :index
       end
 
