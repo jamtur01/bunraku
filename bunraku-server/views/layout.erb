@@ -1,22 +1,68 @@
 <html>
   <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
     <meta http-equiv="refresh" content="5">
     <title>Bunraku Status Panel</title>
-    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+    </style>
   </head>
   <body>
-    <div id="main">
-      <h1><a href="/">Bunraku Status Panel</a></h1>
-      <p align="center">
-      <a href="/changed">Show changed nodes</a>&nbsp;
-       <a href="/failed">Show failed nodes</a>&nbsp;
-       <a href="/unchanged">Show unchanged nodes</a>
-      </p>
-      
-      <hr>
-      
-      <p align="center"> <%= yield %> </p>
-      <p align="center"><a href="https://github.com/jamtur01/bunraku">Bunraku <%= Bunraku::Version::VERSION %></a></p>
+   <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="/">Bunraku Status Panel</a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              <li class="active"><a href="<%= url('/') %>">Home</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+          <ul class="nav">
+            <li class="active">
+              <div class="btn-group">
+                <a class="btn btn-inverse dropdown-toggle" data-toggle="dropdown" href="#">
+                  Display nodes
+                  <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                 <a href="<%= url('/changed') %>">Show changed nodes</a>
+                 <a href="<%= url('/failed') %>">Show failed nodes</a>
+                 <a href="<%= url('/unchanged') %>">Show unchanged nodes</a>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
+
+    <div class="container-fluid">
+      <div class="row-fluid">
+            <%= yield %>
+      </div><!--/row-->
+
+      <hr>
+
+      <footer>
+        <p><a href="https://github.com/jamtur01/bunraku">Bunraku <%= Bunraku::Version::VERSION %></a></p>
+        <p>&copy; James Turnbull 2012</p>
+      </footer>
+
+    </div><!--/.fluid-container-->    
+
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
   </body>
 </html>

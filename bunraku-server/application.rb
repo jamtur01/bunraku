@@ -25,7 +25,7 @@ module Bunraku
       configure do
         set :static, true
         set :root, File.dirname(__FILE__)
-        set :public, 'public'
+        set :public_folder, 'public'
         set :redis_server, 'localhost'
         set :redis_port, 6379
         $redis = Redis.new(:host => settings.redis_server, :port => settings.redis_port)
